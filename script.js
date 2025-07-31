@@ -7,8 +7,6 @@ function getWeatherData() {
     fetch(`https://wttr.in/${encodeURIComponent(currentCity)}?format=j1`)
         .then(response => response.json())
         .then(data => {
-            console.log(data);
-
             const weather = data.current_condition[0];
             const conditionTranslator = {
                 "Sunny": "Сонячно",
@@ -66,11 +64,11 @@ function saveCityToLocalStorage(city) {
 }
 
 function getCityFromLocalStorage() {
-    return localStorage.getItem('currentCity') || "Одеса,UA";
+    return localStorage.getItem('currentCity') || "Одеса";
 }
 
 document.querySelector("#inputCity").addEventListener("change", (e) => {
-    const  newCity = e.target.value;
+    const newCity = e.target.value;
     saveCityToLocalStorage(newCity);
     getWeatherData();
     e.target.value = '';
