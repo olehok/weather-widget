@@ -37,6 +37,7 @@ p {
 
 .weather-header {
     border-bottom: #000 solid 0.2rem;
+    position: relative;
 }
 
 #location {
@@ -44,6 +45,21 @@ p {
     padding: 0.2rem;
     margin-bottom: 0.5rem;
     border-bottom: #000 solid 0.2rem;
+    text-transform: capitalize;
+}
+
+.weather-header:hover #location-country {
+    cursor: help;
+    display: block;
+}
+
+#location-country {
+    position: absolute;
+    display: none;
+    transition: 0.5s ease;
+    font-size: 2rem;
+    top: -1rem;
+    right: 0;
 }
 
 #time {
@@ -61,7 +77,6 @@ p {
 }
 
 #refresh {
-    /*font-size: 1.2rem;*/
     width: 8rem;
     background: transparent;
     border: 1px solid #000;

@@ -3,19 +3,46 @@
 
 function getWeatherData() {
     const currentCity = getCityFromLocalStorage();
-    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${currentCity}&appid=ab9ec7c44c465e610941e0dc2c2b6119&units=metric&lang=ua`)
+
+    fetch(`https://wttr.in/${encodeURIComponent(currentCity)}?format=j1`)
         .then(response => response.json())
         .then(data => {
-            document.querySelector("#temp").textContent = `${Math.round(data.main.temp)}°C`;
-            document.querySelector("#feels_like").textContent = `${Math.round(data.main.feels_like)}°C`;
-            document.querySelector("#conditions").textContent = data.weather[0].description;
-            document.querySelector("#humidity").textContent = `${data.main.humidity}%`;
-            document.querySelector("#pressure").textContent = `${data.main.pressure} hPa`;
-            document.querySelector("#wind").textContent = `${data.wind.speed} м/с`;
-            document.querySelector("#location").textContent = `${data.name}, ${data.sys.country}`;
-            updateBackgroundByTemp(Math.round(data.main.temp));
+            console.log(data);
+
+            const weather = data.current_condition[0];
+            const conditionTranslator = {
+                "Sunny": "Сонячно",
+                "Clear": "Ясно",
+                "Partly cloudy": "Мінлива хмарність",
+                "Cloudy": "Хмарно",
+                "Overcast": "Похмуро",
+                "Mist": "Туман",
+                "Patchy rain possible": "Можливий невеликий дощ",
+                "Light rain": "Легкий дощ",
+                "Moderate rain": "Помірний дощ",
+                "Heavy rain": "Сильний дощ",
+                "Thunderstorm": "Гроза",
+                "Snow": "Сніг",
+                "Fog": "Туман",
+                "Freezing fog": "Морозний туман"
+            };
+
+            const windSpeedMps = parseFloat(weather.windspeedKmph) / 3.6;
+
+            const initCondition = weather.weatherDesc[0].value;
+            const translatedCondition = conditionTranslator[initCondition] || initCondition;
+            document.querySelector("#temp").textContent = `${weather.temp_C}°C`;
+            document.querySelector("#feels_like").textContent = `${weather.FeelsLikeC}°C`;
+            document.querySelector("#conditions").textContent = translatedCondition;
+            document.querySelector("#humidity").textContent = `${weather.humidity}%`;
+            document.querySelector("#pressure").textContent = `${weather.pressure} hPa`;
+            document.querySelector("#wind").textContent = `${windSpeedMps.toFixed(2)} м/с`;
+            document.querySelector("#location").textContent = `${currentCity}`;
+            document.querySelector("#location-country").textContent = `${data.nearest_area[0].country[0].value}`;
+            updateBackgroundByTemp(parseFloat(weather.temp_C));
         });
 }
+
 
 function updateTime() {
     const now = new Date();
@@ -56,7 +83,7 @@ document.querySelector("#refresh").addEventListener("click", () => {
 
 setInterval(() => {
     getWeatherData();
-}, 60000);
+}, 600000);
 
 setInterval(() => {
     updateTime();
