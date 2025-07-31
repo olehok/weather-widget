@@ -1,12 +1,11 @@
 // За допомогою запиту отримати дані з API https://openweathermap.org/current, вивести виджет погоди.
 // Також потрібно додати кнопку оновлення данних.
 
-
 function getWeatherData() {
-    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=ab9ec7c44c465e610941e0dc2c2b6119&units=metric&lang=ua`)
+    const currentCity = getCityFromLocalStorage();
+    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${currentCity}&appid=ab9ec7c44c465e610941e0dc2c2b6119&units=metric&lang=ua`)
         .then(response => response.json())
         .then(data => {
-            // console.log(data);
             document.querySelector("#temp").textContent = `${Math.round(data.main.temp)}°C`;
             document.querySelector("#feels_like").textContent = `${Math.round(data.main.feels_like)}°C`;
             document.querySelector("#conditions").textContent = data.weather[0].description;
@@ -35,11 +34,17 @@ function updateBackgroundByTemp(temp) {
     document.body.style.backgroundColor = `hsl(${hue}, 100%, 70%)`;
 }
 
-// let city = !city ? "одеса,UA" : city;
-let city = "одеса,UA";
+function saveCityToLocalStorage(city) {
+    localStorage.setItem('currentCity', city);
+}
+
+function getCityFromLocalStorage() {
+    return localStorage.getItem('currentCity') || "Одеса,UA";
+}
 
 document.querySelector("#inputCity").addEventListener("change", (e) => {
-    city = e.target.value;
+    const  newCity = e.target.value;
+    saveCityToLocalStorage(newCity);
     getWeatherData();
     e.target.value = '';
 });
