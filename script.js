@@ -30,19 +30,25 @@ function getWeatherData() {
             const initCondition = weather.weatherDesc[0].value;
             const translatedCondition = conditionTranslator[initCondition] || initCondition;
 
+            const weatherData = document.querySelector(".weather-data");
+
             if (currentCountry !== "Russia") {
-                document.querySelector("#location").textContent = currentCity;
-                document.querySelector("#location-country").textContent = currentCountry;
-                document.querySelector("#temp").textContent = `${weather.temp_C}°C`;
-                document.querySelector("#feels_like").textContent = `${weather.FeelsLikeC}°C`;
-                document.querySelector("#conditions").textContent = translatedCondition;
-                document.querySelector("#humidity").textContent = `${weather.humidity}%`;
-                document.querySelector("#pressure").textContent = `${weather.pressure} hPa`;
-                document.querySelector("#wind").textContent = `${windSpeedMps.toFixed(2)} м/с`;
+                weatherData.style.opacity = "1";
+                city.textContent = currentCity;
+                country.textContent = currentCountry;
+                temp.textContent = `${weather.temp_C}°C`;
+                feels.textContent = `${weather.FeelsLikeC}°C`;
+                cond.textContent = translatedCondition;
+                hum.textContent = `${weather.humidity}%`;
+                press.textContent = `${weather.pressure} hPa`;
+                wind.textContent = `${windSpeedMps.toFixed(2)} м/с`;
                 updateBackgroundByTemp(parseFloat(weather.temp_C));
             } else {
-                document.querySelector("#location").textContent = "Слава Україні!";
-                document.querySelector("#location-country").textContent = "";
+                weatherData.style.opacity = "0";
+                city.textContent = "Слава Україні!";
+                country.textContent = "трибунал – росії";
+                errorPopup("Місто має бути населеним людьми.");
+                updateBackgroundByTemp(Math.floor(Math.random() * 40));
             }
         });
 }
@@ -73,11 +79,44 @@ function getCityFromLocalStorage() {
     return localStorage.getItem('currentCity') || "Одеса";
 }
 
+function validateInput(value) {
+    const isValidLength = value.length >= 2 && value.length <= 17;
+    const isOnlyLetters = /^[a-zA-Zа-яА-ЯіІїЇєЄґҐ'-]+$/.test(value);
+
+    if (!isOnlyLetters) {
+        errorPopup("Назва міста може містити лише літери.");
+        return false;
+    } else if (!isValidLength) {
+        errorPopup("Назва міста має бути від 2 до 17 літер.");
+        return false;
+    }
+
+    return true;
+}
+
+function errorPopup(message) {
+    const popup = document.querySelector(".error-popup");
+    popup.textContent = message;
+}
+
+
+let city = document.querySelector("#location");
+let country = document.querySelector("#location-country");
+let temp = document.querySelector("#temp");
+let feels = document.querySelector("#feels_like");
+let cond = document.querySelector("#conditions");
+let hum = document.querySelector("#humidity");
+let press = document.querySelector("#pressure");
+let wind = document.querySelector("#wind");
+
 document.querySelector("#inputCity").addEventListener("change", (e) => {
-    const newCity = e.target.value;
-    saveCityToLocalStorage(newCity);
-    getWeatherData();
-    e.target.value = '';
+    errorPopup("");
+    if (validateInput(e.target.value.trim())) {
+        const newCity = e.target.value;
+        saveCityToLocalStorage(newCity);
+        getWeatherData();
+        e.target.value = '';
+    }
 });
 
 document.querySelector("#refresh").addEventListener("click", () => {
