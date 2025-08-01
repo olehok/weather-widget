@@ -17,6 +17,7 @@ body {
 
 p {
     font-size: 1.8rem;
+    margin-right: 1rem;
 }
 
 .weather-widget {
@@ -49,14 +50,14 @@ p {
 }
 
 .weather-header:hover #location-country {
-    cursor: help;
-    display: block;
+    transition: 1s ease;
+    opacity: 1;
 }
 
 #location-country {
     position: absolute;
-    display: none;
-    transition: 0.5s ease;
+    opacity: 0;
+    transition: 0.7s ease;
     font-size: 2rem;
     top: -1rem;
     right: 0;
@@ -74,6 +75,7 @@ p {
 .weather-data .flex-container > p:nth-child(even) {
     font-size: 3rem;
     font-weight: 700;
+    margin-right: 0;
 }
 
 #refresh {
