@@ -26,18 +26,24 @@ function getWeatherData() {
             };
 
             const windSpeedMps = parseFloat(weather.windspeedKmph) / 3.6;
-
+            const currentCountry = data.nearest_area[0].country[0].value;
             const initCondition = weather.weatherDesc[0].value;
             const translatedCondition = conditionTranslator[initCondition] || initCondition;
-            document.querySelector("#temp").textContent = `${weather.temp_C}°C`;
-            document.querySelector("#feels_like").textContent = `${weather.FeelsLikeC}°C`;
-            document.querySelector("#conditions").textContent = translatedCondition;
-            document.querySelector("#humidity").textContent = `${weather.humidity}%`;
-            document.querySelector("#pressure").textContent = `${weather.pressure} hPa`;
-            document.querySelector("#wind").textContent = `${windSpeedMps.toFixed(2)} м/с`;
-            document.querySelector("#location").textContent = `${currentCity}`;
-            document.querySelector("#location-country").textContent = `${data.nearest_area[0].country[0].value}`;
-            updateBackgroundByTemp(parseFloat(weather.temp_C));
+
+            if (currentCountry !== "Russia") {
+                document.querySelector("#location").textContent = currentCity;
+                document.querySelector("#location-country").textContent = currentCountry;
+                document.querySelector("#temp").textContent = `${weather.temp_C}°C`;
+                document.querySelector("#feels_like").textContent = `${weather.FeelsLikeC}°C`;
+                document.querySelector("#conditions").textContent = translatedCondition;
+                document.querySelector("#humidity").textContent = `${weather.humidity}%`;
+                document.querySelector("#pressure").textContent = `${weather.pressure} hPa`;
+                document.querySelector("#wind").textContent = `${windSpeedMps.toFixed(2)} м/с`;
+                updateBackgroundByTemp(parseFloat(weather.temp_C));
+            } else {
+                document.querySelector("#location").textContent = "Слава Україні!";
+                document.querySelector("#location-country").textContent = "";
+            }
         });
 }
 
