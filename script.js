@@ -47,7 +47,7 @@ function getWeatherData() {
                 weatherData.style.opacity = "0";
                 city.textContent = "Слава Україні!";
                 country.textContent = "трибунал – росії";
-                errorPopup("Місто має бути населеним людьми.");
+                errorPopup("Місто має бути населено людьми.");
                 updateBackgroundByTemp(Math.floor(Math.random() * 40));
             }
         });
@@ -98,7 +98,6 @@ function errorPopup(message) {
     const popup = document.querySelector(".error-popup");
     popup.textContent = message;
 }
-
 
 let city = document.querySelector("#location");
 let country = document.querySelector("#location-country");

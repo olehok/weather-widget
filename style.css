@@ -100,6 +100,7 @@ p {
     border-radius: 0.3rem;
     max-width: 8rem;
     background: transparent;
+    margin-bottom: 1rem;
 }
 
 .flex-container label {
@@ -149,5 +150,9 @@ p {
 
     .weather-data .flex-container > p:nth-child(even) {
         font-size: 2rem;
+    }
+
+    .error-popup {
+        top : 6rem;
     }
 }
