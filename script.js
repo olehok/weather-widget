@@ -16,6 +16,7 @@ function getWeatherData() {
                 "Overcast": "Похмуро",
                 "Mist": "Туман",
                 "Patchy rain possible": "Можливий невеликий дощ",
+                "Patchy rain nearby": "Можливий невеликий дощ поблизу",
                 "Light rain": "Легкий дощ",
                 "Moderate rain": "Помірний дощ",
                 "Heavy rain": "Сильний дощ",
@@ -29,8 +30,6 @@ function getWeatherData() {
             const currentCountry = data.nearest_area[0].country[0].value;
             const initCondition = weather.weatherDesc[0].value;
             const translatedCondition = conditionTranslator[initCondition] || initCondition;
-
-            const weatherData = document.querySelector(".weather-data");
 
             if (currentCountry !== "Russia") {
                 weatherData.style.opacity = "1";
@@ -50,9 +49,13 @@ function getWeatherData() {
                 errorPopup("Місто має бути населено людьми.");
                 updateBackgroundByTemp(Math.floor(Math.random() * 40));
             }
-        });
+        }).catch(error => {
+        console.error("Error fetching weather data:", error);
+        errorPopup("Не вдалося отримати дані про погоду.");
+        weatherData.style.opacity = "0";
+        updateBackgroundByTemp(Math.floor(Math.random() * 40));
+    });
 }
-
 
 function updateTime() {
     const now = new Date();
@@ -101,6 +104,7 @@ function errorPopup(message) {
 
 let city = document.querySelector("#location");
 let country = document.querySelector("#location-country");
+let weatherData = document.querySelector(".weather-data");
 let temp = document.querySelector("#temp");
 let feels = document.querySelector("#feels_like");
 let cond = document.querySelector("#conditions");
